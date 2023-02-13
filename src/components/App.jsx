@@ -5,19 +5,25 @@ import Section from './Section/Section';
 import Statistics from './Statistics/Statistics';
 
 
-const GOOD = 'good';
-const NEUTRAL = 'neutral';
-const BAD = 'bad';
+const options = ['good', 'bad', 'neutral'];
 
+const Feedback = () =>{
+  const [feedbacks, setFeedbacks] = useState({
+    good: 0,
+    neutral: 0,
+    bad: 0,
+  });
 
-function App() {
-  const [good, setGood] = useState(0);
-  const [neutral, setNeutral] = useState(0);
-  const [bad, setBad] = useState(0);
+const leaveFeedback = feedback => {
+  setFeedbacks(prevState => {
+    const value = prevState[feedback];
+    return { ...prevState, [feedback]: value + 1 };
+  });
+};
 
-
-  const countTotalFeedback = () => {
-    return Number(good + neutral + bad);
+const countTotalFeedback = () => {
+  const { good, neutral, bad } = feedbacks;
+  return good + bad + neutral;
   };
 
 
@@ -31,26 +37,16 @@ function App() {
     return result;
   };
 
-  const leaveFeedback = feedback => {
-    switch (feedback) {
-      case GOOD:
-        return setGood(prevGood => prevGood + 1);
-      case NEUTRAL:
-        return setNeutral(prevNeutral => prevNeutral + 1);
-      case BAD:
-        return setBad(prevBad => prevBad + 1);
-      default:
-        return;
-    }
-  };
-
+  const { good, neutral, bad } = feedbacks;
+  const totalFeedbackCount = countTotalFeedback();
+  const positiveFeedback = countPositiveFeedbackPercentage(); 
 
     return (
       <>
         <Section title={'Please leave feedback'}>
           <FeedbackOptions
             onLeaveFeedback={leaveFeedback}
-            options={[GOOD, NEUTRAL, BAD]}
+            options={options}
           />
           
           {countTotalFeedback() ? (
@@ -58,8 +54,8 @@ function App() {
             good={good}
             neutral={neutral}
             bad={bad}
-            total={countTotalFeedback()}
-            positivePercentage={countPositiveFeedbackPercentage()}
+            total={totalFeedbackCount}
+            positivePercentage={positiveFeedback}
             />
             ) : (
               <Notification message="There is no feedback" />
@@ -69,5 +65,5 @@ function App() {
       );
     }
     
-    export default App;
+    export default Feedback;
     

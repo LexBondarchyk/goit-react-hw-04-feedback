@@ -12,6 +12,7 @@
   color: rgb(2, 2, 2);
   border-radius: 10px;
   cursor: pointer;
+  text-transform: capitalize;
 }
 
 .button:hover {
